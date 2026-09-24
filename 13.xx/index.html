@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" manifest="cache.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ahmadi_Club</title>
+<style>
+:root{font-family:"Segoe UI",Tahoma,Arial,sans-serif;color:#f4f7fb;background:#070a0f}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#070a0f}
+body{direction:rtl;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:22px;overflow:hidden;background-image:linear-gradient(135deg,rgba(5,8,13,.94),rgba(9,15,24,.78)),url("ahmadi_club.jpg");background-size:cover;background-position:center}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 35%,rgba(89,139,255,.13),transparent 42%);pointer-events:none}
+.shell{width:min(560px,100%);position:relative}
+.card{background:rgba(11,16,25,.9);border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:28px;box-shadow:0 24px 70px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.04);backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:13px;padding-bottom:22px;margin-bottom:24px;border-bottom:1px solid rgba(255,255,255,.08)}
+.brand img{width:52px;height:52px;border-radius:15px;object-fit:cover;border:1px solid rgba(255,255,255,.12);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.brand strong{display:block;font-size:20px;line-height:1.2;color:#fff}.brand span{display:block;margin-top:4px;font-size:12px;color:#8794a8}
+.eyebrow{font-size:12px;color:#7e8da4;margin-bottom:8px}.state{font-size:25px;line-height:1.35;font-weight:750;color:#fff;margin-bottom:13px}.detail{font-size:14px;color:#aab5c6}.detail b{color:#fff}
+.status{display:flex;align-items:center;gap:10px;margin-top:24px;padding:13px 15px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.07);font-size:13px;color:#aeb9c9;min-height:22px}.status:before{content:"";width:8px;height:8px;border-radius:50%;background:#7f8da1;box-shadow:0 0 12px currentColor;flex:none}.status.cacheok{color:#91d8aa}.status.cacheok:before{background:#62d58a}
+.ok{color:#91d8aa}.bad{color:#ff8f8f}.warn{color:#f0cb76}
+@media(max-width:520px){body{padding:14px}.card{padding:21px;border-radius:20px}.state{font-size:21px}.brand img{width:46px;height:46px}}
+</style>
+
+</head>
+<body>
+<div class="shell"><main class="card">
+  <header class="brand"><img src="ahmadi_club logo.jpg" alt="Ahmadi Club"><div><strong>Ahmadi_Club</strong><span>PS4 Jailbreak</span></div></header>
+  <div class="eyebrow">وضعیت دستگاه</div>
+  <div id="state" class="state">در حال شناسایی نسخهٔ دستگاه…</div>
+  <div id="det" class="detail"></div>
+  <div id="cache" class="status"></div>
+</main></div>
+<script>
+(function () {
+    var stateEl = document.getElementById("state");
+    var detEl = document.getElementById("det");
+    var cacheEl = document.getElementById("cache");
+    function setState(t, c) { stateEl.textContent = t; stateEl.className = c || ""; }
+    function setCache(t, ok) { cacheEl.textContent = t; cacheEl.className = ok ? "cacheok" : ""; }
+    var params = new URLSearchParams(location.search);
+
+    // Firmwares this build has a MEASURED kernel table for. jb.js still runs its
+    // own kernel-table-present gate, so this is UX only -- an unlisted firmware
+    // can still be launched with a tap. KEEP IN SYNC with ps4_offsets.js: add a
+    // fwnum here in the SAME commit that fills that firmware's kernel RVAs.
+    // The PS4 reports its minor as two hex digits in the UA (13.52 -> minor 0x52).
+    var SUPPORTED = { 1302: 1, 1304: 1, 1350: 1, 1352: 1 }; // all measured on hardware
+
+    var key = null, fwnum = null;
+    var m = /PlayStation\s+4[\/ ](\d+)\.(\d+)/.exec(navigator.userAgent);
+    if (m) {
+        var ms = parseInt(m[2], 16).toString(16);
+        if (ms.length < 2) ms = "0" + ms;
+        key = m[1] + "." + ms;
+        fwnum = parseInt(m[1], 10) * 100 + parseInt(ms, 10);
+    }
+
+    var forced = params.get("force") === "1";
+    var supported = forced || (fwnum !== null && SUPPORTED[fwnum] === 1);
+    detEl.innerHTML = "نسخهٔ نرم‌افزار <b>" + (key || "ناشناخته") + "</b>"
+        + (supported ? " &middot; <b>پشتیبانی می‌شود</b>"
+                     : " &middot; این نسخه در جدول هسته موجود نیست");
+
+    var target = "jb.html" + location.search;
+    function go() { setState("در حال بارگذاری جیلبریک…", "warn"); location.replace(target); }
+
+    function waitForTap(msg, action) {
+        setState(msg, "warn");
+        function fire() {
+            window.removeEventListener("click", fire);
+            window.removeEventListener("keydown", fire);
+            action();
+        }
+        window.addEventListener("click", fire);
+        window.addEventListener("keydown", fire);
+    }
+
+    // Off-target consoles are not launched automatically -- one tap still runs
+    // it, so a user-agent quirk on the real 13.52 console can never lock it out.
+    if (!supported) {
+        setState("نسخهٔ سیستم‌عامل پشتیبانی نمی‌شود", "bad");
+        waitForTap("پشتیبانی نمی‌شود (" + (key || "ناشناخته") + ") -- برای ادامه، دکمهٔ X را فشار دهید یا روی صفحه بزنید", go);
+        return;
+    }
+
+    var ac = window.applicationCache;
+    if (!ac || !document.documentElement.hasAttribute("manifest")) {
+        go();
+    } else if (!navigator.onLine) {
+        setCache("آفلاین — اجرا از حافظهٔ کش", true);
+        go();
+    } else if (ac.status === ac.IDLE) {
+        setCache("کش آماده است", true);
+        go();
+    } else if (ac.status === ac.UPDATEREADY) {
+        try { ac.swapCache(); } catch (e) {}
+        setCache("نسخهٔ جدید دریافت شد", true);
+        waitForTap("به‌روزرسانی آماده است -- برای بارگذاری مجدد و اجرا، دکمهٔ X را فشار دهید یا روی صفحه بزنید.",
+                   function () { location.reload(); });
+    } else {
+        setCache("در حال بررسی حافظهٔ کش…");
+        ac.addEventListener("downloading",
+            function () { setCache("در حال آماده‌سازی حافظهٔ کش برای اجرای آفلاین…"); }, false);
+        ac.addEventListener("progress", function (e) {
+            if (e && e.total)
+                setCache("در حال ذخیره‌سازی برای اجرای آفلاین: " + Math.round((e.loaded / e.total) * 100) + "%");
+        }, false);
+        ac.addEventListener("cached", function () {
+            setCache("برای اجرای آفلاین ذخیره شد", true);
+            waitForTap("ذخیره شد (اجرای اول) -- برای اجرا، دکمه X را فشار دهید یا ضربه بزنید.", go);
+        }, false);
+        ac.addEventListener("updateready", function () {
+            try { ac.swapCache(); } catch (e) {}
+            setCache("نسخهٔ جدید دریافت شد", true);
+            waitForTap("به‌روزرسانی آماده است -- برای بارگذاری مجدد و اجرا، دکمهٔ X را فشار دهید یا روی صفحه بزنید.",
+                       function () { location.reload(); });
+        }, false);
+        ac.addEventListener("noupdate", function () {
+            setCache("کش آماده است — امکان اجرای آفلاین وجود دارد", true);
+            go();
+        }, false);
+        ac.addEventListener("error", function () {
+            setCache("کش در دسترس نیست");
+            waitForTap("خطا در حافظه پنهان (Cache) -- برای اجرای برنامه به هر حال، دکمه X را فشار دهید یا روی صفحه ضربه بزنید.", go);
+        }, false);
+        ac.addEventListener("obsolete", function () {
+            setCache("کش منسوخ شده است");
+            waitForTap("کش منسوخ شده است — برای اجرا، کلید X را فشار دهید یا روی صفحه ضربه بزنید.", go);
+        }, false);
+    }
+})();
+</script>
+</body>
+</html>
