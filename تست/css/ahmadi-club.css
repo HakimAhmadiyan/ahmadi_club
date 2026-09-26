@@ -1,0 +1,9 @@
+:root { --ahmadi-accent: #4da3ff; --ahmadi-panel: rgba(12,16,23,.86); }
+html, body { min-height: 100%; }
+body { background-color:#080b10 !important; background-image:linear-gradient(rgba(8,11,16,.84),rgba(8,11,16,.92)),url("../ahmadi_club.jpg") !important; background-size:cover !important; background-position:center !important; background-attachment:fixed !important; }
+.navbar { background:rgba(9,13,19,.90) !important; backdrop-filter:blur(10px); border-bottom:1px solid rgba(255,255,255,.08); }
+.ahmadi-brand { display:flex; align-items:center; gap:.65rem; font-weight:800; letter-spacing:.06em; }
+.ahmadi-brand img { width:38px; height:38px; border-radius:10px; object-fit:cover; box-shadow:0 2px 12px rgba(0,0,0,.35); }
+.ahmadi-brand small { font-size:.68rem; opacity:.55; letter-spacing:.03em; margin-left:-.35rem; margin-top:1.25rem; }
+.card,.modal-content,.accordion-item { background-color:var(--ahmadi-panel); backdrop-filter:blur(8px); }
+.card { border-color:rgba(255,255,255,.09); box-shadow:0 8px 30px rgba(0,0,0,.14); }
