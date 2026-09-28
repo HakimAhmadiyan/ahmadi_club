@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" manifest="cache.manifest">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090b12">
+  <title>صفحه کپیخور گیم نت احمدی بنک</title>
+  <link rel="stylesheet" href="includes/style.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="brand">
+        <img src="includes/ahmadi_club.jpg" alt="Ahmadi Club">
+        <div>
+          <span class="eyebrow">AHMADI CLUB</span>
+          <h1>صفحه کپیخور گیم نت احمدی بنک</h1>
+        </div>
+      </div>
+      <div class="status-pill"><span class="status-dot"></span><span>آماده به کار</span></div>
+    </header>
+
+    <section class="hero-card">
+      <div class="hero-copy">
+        <span class="section-tag">PS4 EXPLOIT</span>
+        <h2>محیط اجرای کپیخور</h2>
+        <p id="UA">در حال اجرا روی:</p>
+      </div>
+      <div class="hero-mark">PS4</div>
+    </section>
+
+    <main class="dashboard">
+      <section class="control-card">
+        <div class="card-heading">
+          <div><span class="mini-label">EXPLOIT CHAIN</span><h3>انتخاب روش اجرا</h3></div>
+        </div>
+
+        <form id="kernel-options" class="kernel-options">
+          <label class="choice">
+            <input type="radio" name="kernel" id="netctrl-exploit" value="netctrl">
+            <span class="choice-ui"><b>NetCtrl</b><small>زنجیره NetCtrl</small></span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="kernel" id="lapse-exploit" value="lapse">
+            <span class="choice-ui"><b>Lapse</b><small>زنجیره Lapse</small></span>
+          </label>
+        </form>
+
+        <button id="jeilbrek" type="button"><span class="btn-icon">⚡</span><span>کپیخور کن</span></button>
+
+        <label class="auto-row" for="autoJbInput">
+          <span><b id="autoJbLabel">کپیخور اتوماتیک</b><small>اجرای خودکار پس از آماده شدن صفحه</small></span>
+          <input id="autoJbInput" type="checkbox">
+          <span class="switch"></span>
+        </label>
+      </section>
+
+      <section class="media-card">
+        <div class="card-heading">
+          <div><span class="mini-label">AHMADI CLUB</span><h3>گیم نت احمدی</h3></div>
+          <span class="live-badge">● ONLINE</span>
+        </div>
+        <div class="media-box"><img src="includes/cat.jpg" alt="Ahmadi Club"></div>
+      </section>
+
+      <section class="console-card">
+        <div class="console-heading"><span><span class="terminal-dot"></span> کنسول اجرا</span><span>LOG</span></div>
+        <pre id="console">اماده کپیخور شدن. در انتظار اجرا شدن...</pre>
+      </section>
+    </main>
+
+    <footer>AHMADI CLUB <span>•</span> بنک، خیابان شریعتی</footer>
+  </div>
+
+  <script src="src/main.js"></script>
+  <script src="includes/script.js"></script>
+</body>
+</html>
